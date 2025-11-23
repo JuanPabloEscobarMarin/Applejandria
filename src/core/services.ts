@@ -70,7 +70,9 @@ export function getContentInstanceData(slug: string) {
   const result: { name: string; value: any }[] = [];
   for (let i = 0; i < contentTypes.length; i++) {
     for (let j = 0; j < contentInstance.length; j++) {
-      if (contentTypes[i].slug === slug) {
+      if (
+        contentTypes[i].slug === slug && contentInstance[j].contentType === slug
+      ) {
         contentTypes[i].fields.forEach((field) => {
           result.push({
             name: field.name,
