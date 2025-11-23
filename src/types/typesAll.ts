@@ -55,5 +55,4 @@ export type FieldType =
   | "number"
   | "boolean"
   | "date"
-  | "json"
-
+  | "json";

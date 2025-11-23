@@ -83,5 +83,3 @@ export function getContentInstanceData(slug: string) {
 
   return result;
 }
-
-
