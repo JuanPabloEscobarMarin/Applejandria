@@ -1,0 +1,31 @@
+{
+  "root": {
+    "children": [
+      {
+        "type": "title",
+        "content": "Hello world"
+      },
+      {
+        "type": "paragraph",
+        "content": "Contenido de ejemplo"
+      },
+      {
+        "type": "list",
+        "children": [
+          {
+            "type": "list-item",
+            "content": "Item 1"
+          },
+          {
+            "type": "list-item",
+            "content": "Item 2"
+          },
+          {
+            "type": "list-item",
+            "content": "Item 3"
+          }
+        ]
+      }
+    ]
+  }
+}
