@@ -1,4 +1,5 @@
 import { getContentInstanceData } from "../core/services.ts";
+import database from "../database.ts";
 import richtext from "../tmp/richtext-example.json" with { type: "json" };
 
 interface Node {
@@ -43,14 +44,14 @@ function renderBlocks(children: Node[]) {
   return html;
 }
 
-export function router(path: string) {
+export async function router(path: string, req: Request) {
   if (path === "/noticias") {
     return Response.json({ data: getContentInstanceData("noticias") });
   }
   if (path === "/becas") {
     return Response.json({ data: getContentInstanceData("becas") });
   }
-  if (path == "/content") {
+  if (path === "/content") {
     const data: RootNode = richtext.root;
     const html = renderBlocks(data.children);
 
@@ -59,6 +60,29 @@ export function router(path: string) {
         "Content-Type": "text/html",
       },
     });
+  }
+  if (path === "/database") {
+    switch (req.method) {
+      case "GET": {
+        const query = database.prepare("SELECT * FROM data");
+        return Response.json(query.all());
+      }
+      case "POST": {
+        const { key, value } = await req.json();
+        try {
+          database.prepare("INSERT INTO data (key, value) VALUES (?, ?)").run(
+            key,
+            value,
+          );
+        } catch (error) {
+          return Response.json({
+            message: "Error al crear el dato",
+            error,
+          }, { status: 400 });
+        }
+        return Response.json({ message: "Creado correctamente" });
+      }
+    }
   }
 
   return Response.json({ message: "Hello world" });

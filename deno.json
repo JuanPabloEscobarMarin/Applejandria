@@ -1,6 +1,7 @@
 {
   "tasks": {
-    "dev": "deno run --watch --allow-net src/main.ts"
+    "dev": "deno run --watch -A src/main.ts",
+    "migrate": "deno run --allow-read --allow-write src/tmp/migration.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1"

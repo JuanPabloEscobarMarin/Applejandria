@@ -1,6 +1,6 @@
 import { router } from "./routes/index.ts";
 
-Deno.serve((req: Request) => {
+Deno.serve(async (req: Request) => {
   const url = new URL(req.url);
-  return router(url.pathname);
+  return await router(url.pathname, req);
 });
