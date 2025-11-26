@@ -1,6 +1,7 @@
 import { getContentInstanceData } from "../core/services.ts";
 import database from "../database.ts";
 import richtext from "../tmp/richtext-example.json" with { type: "json" };
+import { ContentType } from "../types/typesAll.ts";
 
 interface Node {
   type?: string;
@@ -50,6 +51,16 @@ export async function router(path: string, req: Request) {
   }
   if (path === "/becas") {
     return Response.json({ data: getContentInstanceData("becas") });
+  }
+  if (path === "/content-types") {
+    const contentTypes = database.prepare("SELECT * FROM content_types");
+    const fields = database.prepare(
+      "select f.id, f.name, f.type from content_type_fields join fields as f ON content_type_fields.field_id = f.id where content_type_id = ?",
+    );
+
+    const result: ContentType = contentTypes.get();
+    result.fields = fields.all(1);
+    return Response.json(result);
   }
   if (path === "/content") {
     const data: RootNode = richtext.root;
