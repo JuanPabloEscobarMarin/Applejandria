@@ -1,4 +1,3 @@
-import { getContentInstanceData } from "../core/services.ts";
 import database from "../database.ts";
 import richtext from "../tmp/richtext-example.json" with { type: "json" };
 import { ContentType } from "../types/typesAll.ts";
@@ -46,12 +45,6 @@ function renderBlocks(children: Node[]) {
 }
 
 export async function router(path: string, req: Request) {
-  if (path === "/noticias") {
-    return Response.json({ data: getContentInstanceData("noticias") });
-  }
-  if (path === "/becas") {
-    return Response.json({ data: getContentInstanceData("becas") });
-  }
   if (path === "/content-types") {
     const contentTypes = database.prepare("SELECT * FROM content_types");
     const fields = database.prepare(
@@ -63,14 +56,16 @@ export async function router(path: string, req: Request) {
     return Response.json(result);
   }
   if (path === "/content") {
-    const data: RootNode = richtext.root;
-    const html = renderBlocks(data.children);
+    switch (req.method) {
+      case "GET": {
+        const data: RootNode = richtext.root;
+        const html = renderBlocks(data.children);
 
-    return new Response(html, {
-      headers: {
-        "Content-Type": "text/html",
-      },
-    });
+        return new Response(html, {
+          headers: { "Content-Type": "text/html" },
+        });
+      }
+    }
   }
   if (path === "/database") {
     switch (req.method) {
