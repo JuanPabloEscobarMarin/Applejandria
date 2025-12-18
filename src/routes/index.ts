@@ -70,7 +70,7 @@ export async function router(path: string, req: Request) {
   if (path === "/database") {
     switch (req.method) {
       case "GET": {
-        const query = database.prepare("SELECT * FROM data");
+        const query = database.prepare("SELECT * FROM content_type_fields");
         return Response.json(query.all());
       }
       case "POST": {
