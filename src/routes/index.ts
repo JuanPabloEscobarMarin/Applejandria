@@ -6,6 +6,10 @@ interface Node {
   type?: string;
   content?: string;
   children?: Node[];
+  src?: string;
+  alt?: string;
+  width?: string;
+  height?: string;
 }
 
 interface RootNode {
@@ -28,16 +32,33 @@ function renderBlocks(children: Node[]) {
       case "list-item":
         html += `<li>${el.content}</li>`;
         break;
-    }
 
-    if (el.children && el.children.length > 0) {
-      switch (el.type) {
-        case "list":
-          html += "<ul>";
+      case 'unordered-list':
+        if (el.children && el.children.length > 0) {
+          html += '<ul>';
           html += renderBlocks(el.children);
           html += "</ul>";
-          break;
-      }
+        }
+        break;
+
+      case 'ordered-list':
+        if (el.children && el.children.length > 0) {
+          html += '<ol>';
+          html += renderBlocks(el.children);
+          html += "</ol>";
+        }
+        break;
+        
+      case 'breaker':
+        html += `<br/>`;
+        break;
+
+      case 'image':
+        html += `<img src="${el.src}" alt="${el.alt}" width=${el.width}  height=${el.height}/>`;
+        break;
+       
+      default: throw new Error('Type not exists [' + el.type + ']');
+
     }
   }
 
@@ -59,7 +80,17 @@ export async function router(path: string, req: Request) {
     switch (req.method) {
       case "GET": {
         const data: RootNode = richtext.root;
-        const html = renderBlocks(data.children);
+        let html = "";
+        try {
+          html = renderBlocks(data.children);
+        }
+        catch (error) {
+          return Response.json({
+            message: "Error al renderizar el contenido",
+            error,
+          }, { status: 500 });
+        }
+
 
         return new Response(html, {
           headers: { "Content-Type": "text/html" },

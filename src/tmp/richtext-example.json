@@ -10,7 +10,17 @@
         "content": "Contenido de ejemplo"
       },
       {
-        "type": "list",
+        "type": "breaker"
+      },
+      {
+        "type": "image",
+        "src": "https://nupec.com/wp-content/uploads/2021/02/Captura-de-pantalla-2021-02-08-a-las-13.59.48.png",
+        "alt": "A cute ginger cat",
+        "width": "200",
+        "height": "150"
+      },
+      {
+        "type": "unordered-list",
         "children": [
           {
             "type": "list-item",
